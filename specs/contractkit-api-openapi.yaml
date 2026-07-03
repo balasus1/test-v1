@@ -10,43 +10,6 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
   x-copyright: Copyright (c) 2026 Enterprise Corp
-paths:
-  /api/v1/payment:
-    post:
-      tags:
-        - New Handler
-      summary: New endpoint
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                itemName:
-                  type: string
-                itemDesc:
-                  type: string
-      responses:
-        "200":
-          description: Successful response
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  paymentId:
-                    type: string
-                  orderId:
-                    type: string
-                  orderName:
-                    type: string
-                  description:
-                    type: string
-                example:
-                  paymentId: ""
-                  orderId: ""
-                  orderName: ""
-                  description: ""
+paths: {}
 x-generated-by: Contract Kit
 x-spdx-license-id: Apache-2.0
