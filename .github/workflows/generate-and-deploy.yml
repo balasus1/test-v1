@@ -1,0 +1,98 @@
+name: Generate and Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'specs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    name: Generate Code from OpenAPI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install OpenAPI Generator CLI
+        run: |
+          npm install @openapitools/openapi-generator-cli -g
+          openapi-generator-cli version
+
+      - name: Create Directories
+        run: |
+          mkdir -p backend
+          mkdir -p frontend
+
+      - name: Generate Spring Boot Template
+        run: |
+          openapi-generator-cli generate \
+            -i specs/contractkit-api-openapi.json \
+            -g spring \
+            -o backend \
+            --additional-properties=interfaceOnly=false,useSpringBoot3=true,apiPackage=com.enterprise.api.payments,modelPackage=com.enterprise.api.payments.model,groupId=com.enterprise.api.payments,artifactId=enterprise-payment-service
+
+      - name: Generate Angular Client Template
+        run: |
+          openapi-generator-cli generate \
+            -i specs/contractkit-api-openapi.json \
+            -g typescript-angular \
+            -o frontend \
+            --additional-properties=npmName=angular-api-client,supportsES6=true
+
+      - name: Commit Generated Projects
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: auto-generate spring boot and angular code"
+          branch: ${{ github.head_ref || github.ref_name }}
+
+  deploy:
+    name: Deploy to OVH VPS
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            mkdir -p /app/contractkit-service
+            cd /app/contractkit-service
+            
+            # Clean old files and clone/pull latest repo
+            if [ -d ".git" ]; then
+              git fetch --all
+              git reset --hard origin/${{ github.ref_name }}
+              git pull
+            else
+              git clone https://github.com/${{ github.repository }}.git .
+            fi
+            
+            # Run docker-compose build and restart services
+            docker compose down
+            docker compose up --build -d
