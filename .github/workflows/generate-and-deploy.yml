@@ -42,7 +42,7 @@ jobs:
             -i specs/contractkit-api-openapi.json \
             -g spring \
             -o backend \
-            --additional-properties=interfaceOnly=false,useSpringBoot3=true,apiPackage=com.enterprise.api.payments,modelPackage=com.enterprise.api.payments.model,groupId=com.enterprise.api.payments,artifactId=enterprise-payment-service
+            --additional-properties=interfaceOnly=false,useSpringBoot3=true,apiPackage=com.enterprise.api.contractkit,modelPackage=com.enterprise.api.contractkit.model,groupId=com.enterprise.api,artifactId=contractkit-service
 
       - name: Generate Angular Client Template
         run: |
