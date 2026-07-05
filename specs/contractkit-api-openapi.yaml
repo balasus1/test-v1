@@ -10,6 +10,293 @@ info:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0
   x-copyright: Copyright (c) 2026 Enterprise Corp
-paths: {}
+paths:
+  /v1/auth/register:
+    post:
+      tags:
+        - Default
+      summary: POST_auth_register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+                example: {}
+  /v1/auth/login:
+    post:
+      tags:
+        - Default
+      summary: POST_auth_login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+  /v1/products:
+    get:
+      tags:
+        - Default
+      summary: GET_products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                search:
+                  type: string
+                min_price:
+                  type: number
+                max_price:
+                  type: number
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties: {}
+                example:
+                  - {}
+  /v1/products/{id}:
+    get:
+      tags:
+        - Default
+      summary: GET_products__id_
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Path parameter: id"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  price:
+                    type: number
+                  category:
+                    type: string
+                  image_url:
+                    type: string
+                  stock:
+                    type: integer
+                  created_at:
+                    type: string
+                  updated_at:
+                    type: string
+  /v1/cart:
+    get:
+      tags:
+        - Default
+      summary: GET_cart
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+  /v1/cart/items:
+    post:
+      tags:
+        - Default
+      summary: POST_cart_items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: string
+                quantity:
+                  type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+  /v1/checkout:
+    post:
+      tags:
+        - Default
+      summary: POST_checkout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                address_id:
+                  type: string
+                payment_method_id:
+                  type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  items:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: object
+                  total_amount:
+                    type: number
+                  status:
+                    type: string
+                  created_at:
+                    type: string
+  /v1/orders:
+    get:
+      tags:
+        - Default
+      summary: GET_orders
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+  /v1/orders/{orderId}:
+    get:
+      tags:
+        - Default
+      summary: GET_orders__orderId_
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Path parameter: orderId"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  items:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: object
+                  total_amount:
+                    type: number
+                  status:
+                    type: string
+                  created_at:
+                    type: string
+  /v1/addresses:
+    get:
+      tags:
+        - Default
+      summary: GET_addresses
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+    post:
+      tags:
+        - Default
+      summary: POST_addresses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                line1:
+                  type: string
+                line2:
+                  type: string
+                city:
+                  type: string
+                state:
+                  type: string
+                postal_code:
+                  type: string
+                country:
+                  type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
 x-generated-by: Contract Kit
 x-spdx-license-id: Apache-2.0
