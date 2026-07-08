@@ -37,7 +37,6 @@ paths:
               schema:
                 type: object
                 properties: {}
-                example: {}
   /v1/auth/login:
     post:
       tags:
@@ -88,12 +87,8 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  type: object
-                  properties: {}
-                example:
-                  - {}
+                type: object
+                properties: {}
   /v1/products/{id}:
     get:
       tags:
