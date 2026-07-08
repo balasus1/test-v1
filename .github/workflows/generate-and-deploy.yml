@@ -12,6 +12,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   generate:
     name: Generate Code from OpenAPI
@@ -43,7 +47,6 @@ jobs:
             -g spring \
             -o backend \
             --additional-properties=interfaceOnly=false,useSpringBoot3=true,apiPackage=com.enterprise.api.contractkit,modelPackage=com.enterprise.api.contractkit.model,groupId=com.enterprise.api,artifactId=contractkit-service
-
       - name: Generate Angular Client Template
         run: |
           openapi-generator-cli generate \
@@ -51,6 +54,12 @@ jobs:
             -g typescript-angular \
             -o frontend \
             --additional-properties=npmName=angular-api-client,supportsES6=true
+
+      - name: Pull latest changes before commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull origin ${{ github.head_ref || github.ref_name }} --rebase || true
 
       - name: Commit Generated Projects
         uses: stefanzweifel/git-auto-commit-action@v4
