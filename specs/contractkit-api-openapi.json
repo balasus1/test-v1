@@ -45,8 +45,7 @@
               "application/json": {
                 "schema": {
                   "type": "object",
-                  "properties": {},
-                  "example": {}
+                  "properties": {}
                 }
               }
             }
@@ -129,14 +128,8 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {}
-                  },
-                  "example": [
-                    {}
-                  ]
+                  "type": "object",
+                  "properties": {}
                 }
               }
             }
